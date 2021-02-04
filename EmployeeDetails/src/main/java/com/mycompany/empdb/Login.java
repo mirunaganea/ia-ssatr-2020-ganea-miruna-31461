@@ -30,7 +30,6 @@ public class Login extends javax.swing.JFrame {
     public Login() throws ClassNotFoundException, SQLException {
         initComponents();
         
-//        conn = DbAccess.DbAccess();
         this.setLocationRelativeTo(null); //open jFrame in the center of the screen
     }
     

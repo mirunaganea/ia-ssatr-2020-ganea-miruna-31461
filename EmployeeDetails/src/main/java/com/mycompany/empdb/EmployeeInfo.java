@@ -51,6 +51,7 @@ public class EmployeeInfo extends javax.swing.JFrame  {
         btn_save.setEnabled(false);
     }
     public void ClearFields(){
+        txt_id.setText("");
         txt_name.setText("");
         txt_age.setText("");
         txt_bg.setText("");
@@ -610,12 +611,13 @@ public class EmployeeInfo extends javax.swing.JFrame  {
         
         
             try {
-                db.insert(name_validate, gender, age_validate, bg_validate, contact_validate, combo_validate, dte, address_validate, employeeimage);
+                Employee e = new Employee(name_validate, gender, age_validate, bg_validate, contact_validate, combo_validate, dte, address_validate, employeeimage);
+                db.insert(e);
 
                 JOptionPane.showMessageDialog(null, "Data saved successfully");
             }
             catch (Exception e){
-
+                    JOptionPane.showMessageDialog(null, e);
             }
         }
         try {
@@ -645,7 +647,7 @@ public class EmployeeInfo extends javax.swing.JFrame  {
         int tableClick = Integer.parseInt(jTable1.getModel().getValueAt(row, 9).toString());
         
         try {
-             rs = db.tableClicked(tableClick);
+            rs = db.tableClicked(tableClick);
             
             if(rs.next()){
                 String strId = rs.getString("ID");
@@ -721,8 +723,12 @@ public class EmployeeInfo extends javax.swing.JFrame  {
             String combovalue = jComboBox_q.getSelectedItem().toString();
             java.util.Date date = jDateChooser1.getDate();
             
-            db.update(txt_name.getText(), gender, txt_age.getText(), txt_bg.getText(), txt_contact.getText(), combovalue, date, jTextArea_addr.getText(), employeeimage, txt_id.getText());
-            JOptionPane.showMessageDialog(null, "Update successful");
+            Employee e = db.findById(txt_id.getText());
+            if(e!=null){
+                db.update(txt_name.getText(), gender, txt_age.getText(), txt_bg.getText(), txt_contact.getText(), combovalue, date, jTextArea_addr.getText(), employeeimage, txt_id.getText());
+                JOptionPane.showMessageDialog(null, "Update successful");
+            }
+                
         } 
         catch (Exception e) {
             

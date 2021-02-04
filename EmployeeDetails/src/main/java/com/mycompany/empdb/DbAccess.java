@@ -44,24 +44,25 @@ public class DbAccess {
         ResultSet rs = s.executeQuery("SELECT * FROM EMPLOYEEINFO");  
         return rs;
     }
-    public void insert(String name, String gender, String age,String bg, String contact, String qualification, java.util.Date date, String address, byte[] image) throws SQLException {
+    public void insert(Employee e) throws SQLException {
+        
         
         String sql = "INSERT INTO EMPLOYEEINFO (name,gender,age,bloodgroup,contactno,qualification, datejoined, address, image) values (?,?,?,?,?,?,?,?,?)";
         pst=conn.prepareStatement(sql);
 
-        pst.setString(1, name);
-        pst.setString(2, gender);
-        pst.setString(3, age);
-        pst.setString(4, bg);
-        pst.setString(5, contact);
-        pst.setString(6, qualification);
+        pst.setString(1, e.getName());
+        pst.setString(2, e.getGender());
+        pst.setString(3, e.getAge());
+        pst.setString(4, e.getBloodGroup());
+        pst.setString(5, e.getContactNo());
+        pst.setString(6, e.getQualification());
 
         SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
-        String strDateOutput = sdf.format(date);
+        String strDateOutput = sdf.format(e.getDateJoined());
 
         pst.setString(7, strDateOutput);
-        pst.setString(8, address);
-        pst.setBytes(9,image);
+        pst.setString(8, e.getAddress());
+        pst.setBytes(9,e.getImage());
 
         pst.execute();
         pst.close();
@@ -104,6 +105,17 @@ public class DbAccess {
         pst.setString(1, id);
         pst.execute();
         pst.close();
+    }
+    
+    public Employee findById(String id) throws SQLException{
+        Statement s = conn.createStatement();
+        ResultSet rs = s.executeQuery("SELECT * FROM EmployeeInfo WHERE ID="+id+"");
+        if(rs.next()){
+            return new Employee(rs.getString("name"),rs.getString("gender"),rs.getString("age"),rs.getString("bloodgroup"),rs.getString("contactno"),
+                                rs.getString("qualification"),rs.getDate("datejoined"),rs.getString("address"),rs.getBytes("image"));
+        }else{
+            return null;
+        }           
     }
 }
 
